@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      #test-svg {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <svg id="test-svg" width="500" height="200">
+      <rect x="0" y="0" width="500" height="200" fill="black"/>
+      <foreignObject x="0" y="0" width="500" height="200">
+        <div xmlns="http://www.w3.org/1999/xhtml">
+          <style>
+            .wrapper { 
+              display: table;
+              font-size: 60px;
+              width: 500px;
+              height: 200px;
+            }
+            p {
+              display: table-cell;
+              text-align: center;
+              vertical-align: middle;
+              font-family: monospace;
+              color: white;
+            }
+          </style>
+          <div class="wrapper">
+            <p id="text">sup.</p>
+          </div>
+        </div>
+      </foreignObject>
+    </svg>
+    
+    <script src="bower_components/threejs/build/three.js" charset="utf-8"></script>
+    <script src="main.js" charset="utf-8"></script>
+  </body>
+</html>
