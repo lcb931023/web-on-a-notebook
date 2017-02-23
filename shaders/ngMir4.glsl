@@ -1,4 +1,5 @@
 // https://www.shadertoy.com/view/Mlj3Dw#
+// No copyright infringement intended
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {

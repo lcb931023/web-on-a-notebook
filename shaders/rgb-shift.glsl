@@ -1,4 +1,5 @@
 // https://www.shadertoy.com/view/4t23Rc#
+// No copyright infringement intended
 
 #define AMPLITUDE 0.2
 #define SPEED 0.05
