@@ -10,23 +10,24 @@
     </style>
   </head>
   <body>
-    <svg id="test-svg" width="500" height="200">
-      <rect x="0" y="0" width="500" height="200" fill="black"/>
-      <foreignObject x="0" y="0" width="500" height="200">
+    <svg id="test-svg" width="512" height="512">
+      <rect x="0" y="0" width="512" height="512"/>
+      <foreignObject x="0" y="0" width="512" height="512">
         <div xmlns="http://www.w3.org/1999/xhtml">
           <style>
             .wrapper { 
               display: table;
               font-size: 60px;
-              width: 500px;
-              height: 200px;
+              width: 512px;
+              height: 512px;
+              background: white;
             }
             p {
               display: table-cell;
               text-align: center;
               vertical-align: middle;
               font-family: monospace;
-              color: white;
+              color: black;
             }
           </style>
           <div class="wrapper">
@@ -35,6 +36,42 @@
         </div>
       </foreignObject>
     </svg>
+    
+    <script id="fragment-shader" type="x-shader/x-fragment">
+    
+      // uniform float time;
+      // uniform vec2 resolution;
+      varying vec2 vUv;
+      uniform sampler2D domTexture;
+      
+      void main( void )
+      {
+        // float i = iGlobalTime;
+        // vec2 uv = vUv.xy / resolution.xy;
+        // vec4 c = texture(iChannel0,uv)*2.0;
+        // uv.xy+=c.bg*(iMouse.x/iResolution.x-.5);
+        // uv-=.5;
+        // float a = atan(uv.y,uv.x);
+        // float d = length(uv);
+        // a+=c.r*(iMouse.y/iResolution.y-.5)*12.0;
+        // uv.x = cos(a)*d;
+        // uv.y = sin(a)*d;
+        // uv+=.5;
+        // c = texture(iChannel0,uv)*2.0;
+        // fragColor = c;
+        gl_FragColor = texture2D(domTexture, vUv);
+      }
+
+    </script>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position =   projectionMatrix * 
+                        modelViewMatrix * 
+                        vec4(position,1.0);
+      }
+    </script>
     
     <script src="bower_components/threejs/build/three.js" charset="utf-8"></script>
     <script src="main.js" charset="utf-8"></script>

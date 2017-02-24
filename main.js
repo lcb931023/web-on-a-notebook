@@ -16,13 +16,20 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-var geometry = new THREE.PlaneGeometry(2, 2);
-var material = new THREE.MeshBasicMaterial({
-  color: 0xFFFFFF,
-  map: svgTexture
+var vertShader = document.getElementById('vertex-shader').innerHTML;
+var fragShader = document.getElementById('fragment-shader').innerHTML;
+
+var material = new THREE.ShaderMaterial({
+  uniforms: {
+    domTexture: {type: 't', value: svgTexture}
+  },
+  vertexShader: vertShader,
+  fragmentShader: fragShader
 });
-var cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+
+var geometry = new THREE.PlaneGeometry(2, 2);
+var plane = new THREE.Mesh(geometry, material);
+scene.add(plane);
 
 camera.position.z = 5;
 
