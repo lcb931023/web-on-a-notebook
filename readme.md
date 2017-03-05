@@ -13,3 +13,23 @@ Experiment with rendering DOM elements inside WebGL.
   - ???
 
 4. Clean up the rendering to reusable functions, "renderer"
+  - [x] create functions to convert dom into dataURL for rendering, then texture
+  - [ ] make the function work for any width / height
+
+
+
+
+## What you **can't** do with your fancy dom
+
+No reference to network resources
+  - No external CSS File
+  - No external Image URL
+
+- All Images have to be converted to data URL
+- CSS background image with data URL is not supported for unknown reason
+- Some CSS units will be different between these two "rendering"
+- Any animation won't work
+
+Needs testing:
+external font files
+system fonts
