@@ -14,7 +14,8 @@ Experiment with rendering DOM elements inside WebGL.
 
 4. Clean up the rendering to reusable functions, "renderer"
   - [x] create functions to convert dom into dataURL for rendering, then texture
-  - [ ] make the function work for any width / height
+  - [x] make the "renderer" work with width / height passed in
+  - [ ] make the renderer responsive
 
 
 

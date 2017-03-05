@@ -21,15 +21,19 @@ function domToTexture(el, w, h) {
   return domTexture;
 }
 
+// hardcoded: size of the image
+var WIDTH = 1400;
+var HEIGHT = 907;
+
 // TODO work out how to deal with width and height
-var domTexture = domToTexture(document.querySelector('.fancy-dom'), 512, 512);
+var domTexture = domToTexture(document.querySelector('.fancy-dom'), WIDTH, HEIGHT);
 console.log(domTexture);
 
 var scene = new THREE.Scene();
-var camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, -500, 1000);
+var camera = new THREE.OrthographicCamera(WIDTH / -2, WIDTH / 2, HEIGHT / 2, HEIGHT / -2, -500, 1000);
 
 var renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(WIDTH, HEIGHT);
 document.body.appendChild(renderer.domElement);
 
 var vertShader = document.getElementById('vertex-shader').innerHTML;
@@ -43,7 +47,7 @@ var material = new THREE.ShaderMaterial({
   fragmentShader: fragShader
 });
 
-var geometry = new THREE.PlaneGeometry(512, 512);
+var geometry = new THREE.PlaneGeometry(WIDTH, HEIGHT);
 var plane = new THREE.Mesh(geometry, material);
 scene.add(plane);
 
