@@ -18,7 +18,6 @@ Experiment with rendering DOM elements inside WebGL.
 
 
 
-
 ## What you **can't** do with your fancy dom
 
 No reference to network resources
@@ -29,7 +28,4 @@ No reference to network resources
 - CSS background image with data URL is not supported for unknown reason
 - Some CSS units will be different between these two "rendering"
 - Any animation won't work
-
-Needs testing:
-external font files
-system fonts
+- System-installed fonts work. However, external font files would have to be encoded in dataURL

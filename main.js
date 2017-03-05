@@ -26,7 +26,7 @@ var domTexture = domToTexture(document.querySelector('.fancy-dom'), 512, 512);
 console.log(domTexture);
 
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+var camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, -500, 1000);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -43,14 +43,11 @@ var material = new THREE.ShaderMaterial({
   fragmentShader: fragShader
 });
 
-var geometry = new THREE.PlaneGeometry(2, 2);
+var geometry = new THREE.PlaneGeometry(512, 512);
 var plane = new THREE.Mesh(geometry, material);
 scene.add(plane);
 
-camera.position.z = 2;
-
 // NOTE render loop
-
 function render() {
   requestAnimationFrame(render);
   renderer.render(scene, camera);
