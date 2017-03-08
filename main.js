@@ -29,6 +29,8 @@ var HEIGHT = 907;
 var domTexture = domToTexture(document.querySelector('.fancy-dom'), WIDTH, HEIGHT);
 console.log(domTexture);
 
+var t_noise = (new THREE.TextureLoader()).load('noise256.png');
+
 var scene = new THREE.Scene();
 var camera = new THREE.OrthographicCamera(WIDTH / -2, WIDTH / 2, HEIGHT / 2, HEIGHT / -2, -500, 1000);
 
@@ -37,11 +39,13 @@ renderer.setSize(WIDTH, HEIGHT);
 document.body.appendChild(renderer.domElement);
 
 var vertShader = document.getElementById('vertex-shader').textContent;
-var fragShader = document.getElementById('fragment-shader').textContent;
+// var fragShader = document.querySelector('.psychedelic-mercury').textContent;
+var fragShader = document.querySelector('.rgb-shift').textContent;
 var uniforms = {
-  u_time: { type: "f", value: 1.0 },
-  u_resolution: { type: "v2", value: new THREE.Vector2(WIDTH, HEIGHT) },
-  u_mouse: { type: "v2", value: new THREE.Vector2(WIDTH/2, HEIGHT/2) },
+  u_time: { type: 'f', value: 1.0 },
+  u_resolution: { type: 'v2', value: new THREE.Vector2(WIDTH, HEIGHT) },
+  u_mouse: { type: 'v2', value: new THREE.Vector2(WIDTH/2, HEIGHT/2) },
+  t_noise: { type: 't', value: t_noise },
   domTexture: { type: 't', value: domTexture }
 };
 var material = new THREE.ShaderMaterial({
@@ -62,7 +66,7 @@ document.onmousemove = function(e){
 // NOTE render loop
 function render() {
   requestAnimationFrame(render);
-  uniforms.u_time.value += 0.05;
+  uniforms.u_time.value += 0.016;
   renderer.render(scene, camera);
 }
 render();
