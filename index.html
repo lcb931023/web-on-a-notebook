@@ -51,27 +51,30 @@
     <!-- NOTE Shaders -->
     <script id="fragment-shader" type="x-shader/x-fragment">
     
-      // uniform float time;
-      // uniform vec2 resolution;
       varying vec2 vUv;
       uniform sampler2D domTexture;
+      uniform vec2 u_resolution;
+      uniform float u_time;
+      uniform vec2 u_mouse;
       
       void main( void )
       {
-        // float i = iGlobalTime;
-        // vec2 uv = vUv.xy / resolution.xy;
-        // vec4 c = texture(iChannel0,uv)*2.0;
-        // uv.xy+=c.bg*(iMouse.x/iResolution.x-.5);
-        // uv-=.5;
-        // float a = atan(uv.y,uv.x);
-        // float d = length(uv);
-        // a+=c.r*(iMouse.y/iResolution.y-.5)*12.0;
-        // uv.x = cos(a)*d;
-        // uv.y = sin(a)*d;
-        // uv+=.5;
-        // c = texture(iChannel0,uv)*2.0;
-        // fragColor = c;
-        gl_FragColor = texture2D(domTexture, vUv);
+        vec2 uv = vUv;
+        vec4 c = texture2D(domTexture, uv)*0.5;
+        uv.xy += c.bg * (u_mouse.x / u_resolution.x - .5);
+        uv -= .5;
+        float a = atan(uv.y, uv.x);
+        float d = length(uv);
+        a += c.r * (u_mouse.y / u_resolution.y - .5) * 12.0;
+        uv.x = cos(a) * d;
+        uv.y = sin(a) * d;
+        uv += .5;
+        c = texture2D(domTexture, uv)*2.0;
+        gl_FragColor = c;
+        
+        // NOTE to simply render the dom texture as is:
+        // gl_FragColor = texture2D(domTexture, vUv);
+        
       }
 
     </script>
