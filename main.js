@@ -40,9 +40,9 @@ document.body.appendChild(renderer.domElement);
 
 var vertShader = document.getElementById('vertex-shader').textContent;
 // var fragShader = document.querySelector('.psychedelic-mercury').textContent;
-// var fragShader = document.querySelector('.rgb-shift').textContent;
+var fragShader = document.querySelector('.rgb-shift').textContent;
 // var fragShader = document.querySelector('.notebook-drawings').textContent;
-var fragShader = document.querySelector('.rain').textContent;
+// var fragShader = document.querySelector('.rain').textContent;
 var uniforms = {
   u_time: { type: 'f', value: 1.0 },
   u_resolution: { type: 'v2', value: new THREE.Vector2(WIDTH, HEIGHT) },
