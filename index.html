@@ -57,7 +57,7 @@
       uniform vec2 u_resolution;
       uniform float u_time;
       uniform vec2 u_mouse;
-      
+
       void main( void )
       {
         vec2 uv = vUv;
@@ -72,15 +72,15 @@
         uv += .5;
         c = texture2D(domTexture, uv) * LUMINANCE;
         gl_FragColor = c;
-        
+
         // NOTE to simply render the dom texture as is:
         // gl_FragColor = texture2D(domTexture, vUv);
-        
+
       }
 
     </script>
     <script class="fragment-shader rgb-shift" type="x-shader/x-fragment">
-      #define AMPLITUDE 0.2
+      #define AMPLITUDE 0.1
       #define SPEED 0.05
 
       varying vec2 vUv;
@@ -96,11 +96,11 @@
           vec2 rs = vec2(shift.x,-shift.y);
           vec2 gs = vec2(shift.y,-shift.z);
           vec2 bs = vec2(shift.z,-shift.x);
-          
+
           float r = texture2D(domTexture, p+rs, 0.0).x;
           float g = texture2D(domTexture, p+gs, 0.0).y;
           float b = texture2D(domTexture, p+bs, 0.0).z;
-          
+
           return vec4(r,g,b,1.0);
       }
 
@@ -111,21 +111,21 @@
       vec4 vec4pow( in vec4 v, in float p ) {
           // Don't touch alpha (w), we use it to choose the direction of the shift
           // and we don't want it to go in one direction more often than the other
-          return vec4(pow(v.x,p),pow(v.y,p),pow(v.z,p),v.w); 
+          return vec4(pow(v.x,p),pow(v.y,p),pow(v.z,p),v.w);
       }
 
       void main( void )
       {
       	vec2 p = vUv;
         vec4 c = vec4(0.0,0.0,0.0,1.0);
-        
+
         // Elevating shift values to some high power (between 8 and 16 looks good)
         // helps make the stuttering look more sudden
-        vec4 shift = vec4pow(noise(vec2(SPEED*u_time,2.0*SPEED*u_time/25.0 )),8.0)
+        vec4 shift = vec4pow(noise(fract(vec2(SPEED*u_time,2.0*SPEED*u_time/25.0 ))),8.0)
             		*vec4(AMPLITUDE,AMPLITUDE,AMPLITUDE,1.0);;
-        
+
         c += rgbShift(p, shift);
-          
+
       	gl_FragColor = c;
       }
 
@@ -135,12 +135,12 @@
       varying vec2 vUv;
       void main() {
         vUv = uv;
-        gl_Position =   projectionMatrix * 
-                        modelViewMatrix * 
+        gl_Position =   projectionMatrix *
+                        modelViewMatrix *
                         vec4(position,1.0);
       }
     </script>
-    
+
     <script src="bower_components/threejs/build/three.js" charset="utf-8"></script>
     <script src="main.js" charset="utf-8"></script>
 
