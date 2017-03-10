@@ -82,10 +82,10 @@ if (isWebGLSupported()) {
     uniforms.iMouse.value.y = HEIGHT/2;
     vertAnimation.update(0, uniforms.iGlobalTime.value);
   }
-  document.addEventListener('touchstart', downHandler);
-  document.addEventListener('mousedown', downHandler);
-  document.addEventListener('touchend', upHandler);
-  document.addEventListener('mouseup', upHandler);
+  renderer.domElement.addEventListener('touchstart', downHandler);
+  renderer.domElement.addEventListener('mousedown', downHandler);
+  renderer.domElement.addEventListener('touchend', upHandler);
+  renderer.domElement.addEventListener('mouseup', upHandler);
   
   // NOTE set up vertex animation
   var vertAnimation	= new THREEx.VertexAnimation(geometry, function(origin, position, delta, now){
