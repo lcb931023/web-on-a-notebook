@@ -1,21 +1,3 @@
-function domToSVGDataURI(el, w, h) {
-  var NS = 'http://www.w3.org/2000/svg';
-  // wrap the dom element in svg
-  var foreign = document.createElementNS(NS, 'foreignObject');
-  foreign.setAttribute('width', w);
-  foreign.setAttribute('height', h);
-  foreign.appendChild(el);
-  var svg = document.createElementNS(NS, 'svg');
-  svg.setAttribute('width', w);
-  svg.setAttribute('height', h);
-  svg.appendChild(foreign);
-  // serialize the svg into string
-  var svgData = (new XMLSerializer()).serializeToString(svg);
-  // convert that to data URI
-  var dataURI = 'data:image/svg+xml; charset=utf8, ' + encodeURIComponent(svgData);
-  return dataURI;
-}
-
 function domToTexture(el, w, h) {
   var domTexture = (new THREE.TextureLoader()).load(domToSVGDataURI(el, w, h));
   return domTexture;
@@ -39,10 +21,15 @@ renderer.setSize(WIDTH, HEIGHT);
 document.body.appendChild(renderer.domElement);
 
 var vertShader = document.getElementById('vertex-shader').textContent;
+
+var fragShader = document.querySelector('.norm').textContent;
+
 // var fragShader = document.querySelector('.psychedelic-mercury').textContent;
 // var fragShader = document.querySelector('.rgb-shift').textContent;
-// var fragShader = document.querySelector('.notebook-drawings').textContent;
-var fragShader = document.querySelector('.rain').textContent;
+// var fragShader = document.querySelector('.notebook-drawings').textContent; // NOTE doesn't look good 
+// var fragShader = document.querySelector('.rain').textContent;
+
+
 var uniforms = {
   iGlobalTime: { type: 'f', value: 1.0 },
   iResolution: { type: 'v2', value: new THREE.Vector2(WIDTH, HEIGHT) },
@@ -72,3 +59,19 @@ function render() {
   renderer.render(scene, camera);
 }
 render();
+
+function changeShader() {
+  var hash = location.hash.substr(1); // remove #
+  if (!hash) return;
+  var shaderEl = document.querySelector('.' + hash);
+  if (!shaderEl) {
+    console.warn("Can't find shader code with hash being " + location.hash);
+    return;
+  }
+  fragShader = shaderEl.textContent;
+  plane.material.fragmentShader = fragShader;
+  plane.material.needsUpdate = true;
+};
+window.onhashchange = changeShader;
+
+changeShader();

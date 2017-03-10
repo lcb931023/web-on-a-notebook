@@ -4,12 +4,16 @@
     <meta charset="utf-8">
     <title></title>
     <style media="screen">
-      #test-svg {
-        display: none;
-      }
     </style>
   </head>
   <body>
+    <div class="ui">
+      <ul>
+        <li><a href="#psychedelic-mercury">Psychedelic Mercury</a></li>
+        <li><a href="#rgb-shift">RGB Shift</a></li>
+        <li><a href="#rain">Rainy Glass</a></li>
+      </ul>
+    </div>
     <div class="fancy-dom">
       <style>
         .fancy-dom {
@@ -52,6 +56,14 @@
 
 
     <!-- NOTE Shaders -->
+    <script class="fragment-shader norm" type="x-shader/x-fragment">
+      varying vec2 vUv;
+      uniform sampler2D domTexture;
+      void main( void )
+      {
+        gl_FragColor = texture2D(domTexture, vUv);
+      }
+    </script>
     <script class="fragment-shader psychedelic-mercury" type="x-shader/x-fragment">
       #define AMPLITUDE 0.5
       #define LUMINANCE 2.0
@@ -238,6 +250,7 @@
       float T;
 
       #define pi 3.1415926
+      #define SPEED 1.0
 
       varying vec2 vUv;
       uniform sampler2D t_noise;
@@ -303,7 +316,7 @@
 
       void main( void )
       {
-          T = iGlobalTime;
+          T = iGlobalTime * SPEED;
 
           vec2 r = vec2(1.0, iResolution.y / iResolution.x);
           vec2 uv = vUv;
@@ -321,7 +334,8 @@
       }
     </script>
 
-    <script src="bower_components/threejs/build/three.js" charset="utf-8"></script>
+    <script src="lib/three.js" charset="utf-8"></script>
+    <script src="domToSVGDataURI.js" charset="utf-8"></script>
     <script src="main.js" charset="utf-8"></script>
 
   </body>
