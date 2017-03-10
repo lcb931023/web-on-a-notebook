@@ -62,7 +62,7 @@ if (isWebGLSupported()) {
     fragmentShader: fragShader
   });
   
-  var geometry = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+  var geometry = new THREE.PlaneGeometry(WIDTH, HEIGHT, 32, 32);
   var plane = new THREE.Mesh(geometry, material);
   scene.add(plane);
   
@@ -70,14 +70,54 @@ if (isWebGLSupported()) {
     uniforms.iMouse.value.x = e.pageX
     uniforms.iMouse.value.y = e.pageY
   }
+  var bDown = false;
+  function downHandler(e) {
+    e.preventDefault();
+    bDown = true;
+  }
+  function upHandler(e) {
+    e.preventDefault();
+    bDown = false;
+    uniforms.iMouse.value.x = WIDTH/2;
+    uniforms.iMouse.value.y = HEIGHT/2;
+    vertAnimation.update(0, uniforms.iGlobalTime.value);
+  }
+  document.addEventListener('touchstart', downHandler);
+  document.addEventListener('mousedown', downHandler);
+  document.addEventListener('touchend', upHandler);
+  document.addEventListener('mouseup', upHandler);
+  
+  // NOTE set up vertex animation
+  var vertAnimation	= new THREEx.VertexAnimation(geometry, function(origin, position, delta, now){
+    // here you put your formula, something clever which fit your needs
+    var speed	= 2 + Math.cos(0.2 * now*Math.PI*2)*2;
+    var angle	= speed*now*Math.PI*2 + origin.y*10;
+    var angle	= 5*now*Math.PI*2 + origin.y*15;
+    // position.x	= origin.x + Math.cos(angle*0.4)*10.1;
+    // position.y	= origin.y + Math.sin(angle*0.1)*40.4;
+    
+    // convert mouse info to THREE-space
+    var mouseX = uniforms.iMouse.value.x - WIDTH/2;
+    var mouseY = - (uniforms.iMouse.value.y - HEIGHT/2);
+    position.x = mouseX * (1-Math.abs(origin.x - mouseX)*0.002) + origin.x + Math.cos(angle*0.4)*4.1;
+    position.y = mouseY * (1-Math.abs(origin.y - mouseY)*0.002) + origin.y + Math.sin(angle*0.1)*4.4;
+  });
+  
   
   // NOTE render loop
-  function render() {
+  var then;
+  function render(now) {
     requestAnimationFrame(render);
-    uniforms.iGlobalTime.value += 0.016;
+    then = then || now-1000/60
+    var dt	= Math.min(200, now - then)
+    then = now;
+
+    dt /= 1000;
+    uniforms.iGlobalTime.value = then/1000;
+    if (bDown) vertAnimation.update(dt, uniforms.iGlobalTime.value);
     renderer.render(scene, camera);
   }
-  render();
+  requestAnimationFrame(render);
   
   function changeShader() {
     var hash = location.hash.substr(1); // remove #
