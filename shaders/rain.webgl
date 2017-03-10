@@ -5,9 +5,9 @@
 varying vec2 vUv;
 uniform sampler2D t_noise;
 uniform sampler2D domTexture;
-uniform vec2 u_resolution;
-uniform float u_time;
-uniform vec2 u_mouse;
+uniform vec2 iResolution;
+uniform float iGlobalTime;
+uniform vec2 iMouse;
 
 float T;
 
@@ -52,7 +52,7 @@ float blobnoises(vec2 uv, float s)
     const float n = 3.0;
     for(float i = 0.0; i < n; i++)
     {
-        vec2 p = vec2(0.0, 1.0 * u_time * (i + 1.0) / n) + 1.0 * uv;
+        vec2 p = vec2(0.0, 1.0 * iGlobalTime * (i + 1.0) / n) + 1.0 * uv;
     	h += pow(0.5 + 0.5 * cos(pi * clamp(simplegridnoise(p * (i + 1.0)) * 2.0, 0.0, 1.0)), s);
     }
 
@@ -70,9 +70,9 @@ vec3 blobnoisenrms(vec2 uv, float s)
 
 void main( void )
 {
-    T = u_time;
+    T = iGlobalTime;
 
-    vec2 r = vec2(1.0, u_resolution.y / u_resolution.x);
+    vec2 r = vec2(1.0, iResolution.y / iResolution.x);
     vec2 uv = vUv;
     vec3 n = blobnoisenrms(25.0 * uv * r, 1.);
     gl_FragColor = texture2D(domTexture, uv + 0.05 * n.xy);

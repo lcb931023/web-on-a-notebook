@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Shadertoy to WebGL Shader Converter</title>
+    <meta name="description" content="Converts codes on shadertoy to copy-paste-able glsl code for the web. Makes it even easier to steal shader code!">
+  </head>
+  <body>
+    <h1>Shadertoy to WebGL Shader Converter</h1>
+    <h3>Converts codes on shadertoy to copy-paste-able glsl code for the web. </h3>
+    <h5>Currently only support converting Fragment Shader that does not involve buffer.</h5>
+    <div class="shadertoy">
+      <h2>Shadertoy</h2>
+      <textarea id="input" rows="8" cols="80"></textarea>
+      <button type="submit" class="btn-submit" style="display: block;">Convert!</button>
+    </div>
+    <div class="webgl">
+      <h2>WebGL</h2>
+      <textarea id="output" rows="8" cols="80"></textarea>
+    </div>
+    <h1>Remember! to attribute the original author properly, and respect the shader's license.</h1>
+    <h3>Reference for building this converter: </h3>
+    <ul>
+      <li>iq's <a target="_blank" href="http://www.iquilezles.org/apps/shadertoy/help.html">Shader Toy Help</a>.</li>
+      <li><a href="https://shadertoyunofficial.wordpress.com/" target="_blank">Shadertoy - Unofficial Blog</a></li>
+      <li>The <code>?</code> icon in bottom right, and the <code>Shader Inputs</code> icon on top left, of Shader Toy editor window</li>
+    </ul>
+    
+    
+    
+  </body>
+
+  <script src="shadertoy-convert.js" charset="utf-8"></script>
+
+  <script type="text/javascript">
+    var btnSubmit, inputEl, outputEl;
+    btnSubmit = document.querySelector('.btn-submit');
+    inputEl = document.querySelector('#input');
+    outputEl = document.querySelector('#output');
+    btnSubmit.addEventListener('click', function(e){
+      var output = convert(inputEl.value);
+      outputEl.value = output;
+    });
+  </script>
+
+</html>

@@ -57,19 +57,19 @@
       #define LUMINANCE 2.0
       varying vec2 vUv;
       uniform sampler2D domTexture;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform vec2 u_mouse;
+      uniform vec2 iResolution;
+      uniform float iGlobalTime;
+      uniform vec2 iMouse;
 
       void main( void )
       {
         vec2 uv = vUv;
         vec4 c = texture2D(domTexture, uv) * AMPLITUDE;
-        uv.xy += c.bg * (u_mouse.x / u_resolution.x - .5);
+        uv.xy += c.bg * (iMouse.x / iResolution.x - .5);
         uv -= .5;
         float a = atan(uv.y, uv.x);
         float d = length(uv);
-        a += c.r * (u_mouse.y / u_resolution.y - .5) * 3.0;
+        a += c.r * (iMouse.y / iResolution.y - .5) * 3.0;
         uv.x = cos(a) * d;
         uv.y = sin(a) * d;
         uv += .5;
@@ -89,9 +89,9 @@
       varying vec2 vUv;
       uniform sampler2D t_noise;
       uniform sampler2D domTexture;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform vec2 u_mouse;
+      uniform vec2 iResolution;
+      uniform float iGlobalTime;
+      uniform vec2 iMouse;
 
 
       vec4 rgbShift( in vec2 p , in vec4 shift) {
@@ -124,7 +124,7 @@
 
         // Elevating shift values to some high power (between 8 and 16 looks good)
         // helps make the stuttering look more sudden
-        vec4 shift = vec4pow(noise(fract(vec2(SPEED*u_time,2.0*SPEED*u_time/25.0 ))),8.0)
+        vec4 shift = vec4pow(noise(fract(vec2(SPEED*iGlobalTime,2.0*SPEED*iGlobalTime/25.0 ))),8.0)
             		*vec4(AMPLITUDE,AMPLITUDE,AMPLITUDE,1.0);;
 
         c += rgbShift(p, shift);
@@ -138,9 +138,9 @@
       varying vec2 vUv;
       uniform sampler2D t_noise;
       uniform sampler2D domTexture;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform vec2 u_mouse;
+      uniform vec2 iResolution;
+      uniform float iGlobalTime;
+      uniform vec2 iMouse;
 
       vec4 noise( in vec2 p ) {
           return texture2D(t_noise, p, 0.0);
@@ -149,7 +149,7 @@
       vec4 getCol(vec2 pos)
       {
           // take aspect ratio into account
-          vec2 uv=((pos-u_resolution.xy*.5))/u_resolution.xy+.5;
+          vec2 uv=((pos-iResolution.xy*.5))/iResolution.xy+.5;
           vec4 c1=texture2D(domTexture,uv);
           vec4 e=smoothstep(vec4(-0.05),vec4(-0.0),vec4(uv,vec2(1)-uv));
           c1=mix(vec4(1,1,1,0),c1,e.x*e.y*e.z*e.w);
@@ -186,7 +186,7 @@
       void main()
       {
           vec2 pos = gl_FragCoord.xy;
-          pos += 4.0*sin(u_time*1.*vec2(1,1.7))*u_resolution.y/400.;
+          pos += 4.0*sin(iGlobalTime*1.*vec2(1,1.7))*iResolution.y/400.;
           vec3 col = vec3(0);
           vec3 col2 = vec3(0);
           float sum=0.;
@@ -196,8 +196,8 @@
               vec2 v=vec2(cos(ang),sin(ang));
               for(int j=0;j<SampNum;j++)
               {
-                  vec2 dpos  = v.yx*vec2(1,-1)*float(j)*u_resolution.y/400.;
-                  vec2 dpos2 = v.xy*float(j*j)/float(SampNum)*.5*u_resolution.y/400.;
+                  vec2 dpos  = v.yx*vec2(1,-1)*float(j)*iResolution.y/400.;
+                  vec2 dpos2 = v.xy*float(j*j)/float(SampNum)*.5*iResolution.y/400.;
                 vec2 g;
                   float fact;
                   float fact2;
@@ -220,16 +220,16 @@
                   }
               }
           }
-          col/=float(SampNum*AngleNum)*.75/sqrt(u_resolution.y);
+          col/=float(SampNum*AngleNum)*.75/sqrt(iResolution.y);
           col2/=sum;
           col.x*=(.6+.8*noise(pos*.7).x);
           col.x=1.-col.x;
           col.x*=col.x*col.x;
 
-          vec2 s=sin(pos.xy*.1/sqrt(u_resolution.y/400.));
+          vec2 s=sin(pos.xy*.1/sqrt(iResolution.y/400.));
           vec3 karo=vec3(1);
           karo-=.5*vec3(.25,.1,.1)*dot(exp(-s*s*80.),vec2(1));
-          float r=length(pos-u_resolution.xy*.5)/u_resolution.x;
+          float r=length(pos-iResolution.xy*.5)/iResolution.x;
           float vign=1.-r*r*r;
           gl_FragColor = vec4(vec3(col.x*col2*karo*vign),1);
       }
@@ -242,9 +242,9 @@
       varying vec2 vUv;
       uniform sampler2D t_noise;
       uniform sampler2D domTexture;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform vec2 u_mouse;
+      uniform vec2 iResolution;
+      uniform float iGlobalTime;
+      uniform vec2 iMouse;
 
       // iq's hash function from https://www.shadertoy.com/view/MslGD8
       vec2 hash( vec2 p ) { p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))); return fract(sin(p)*18.5453); }
@@ -285,7 +285,7 @@
           const float n = 3.0;
           for(float i = 0.0; i < n; i++)
           {
-              vec2 p = vec2(0.0, 1.0 * u_time * (i + 1.0) / n) + 1.0 * uv;
+              vec2 p = vec2(0.0, 1.0 * iGlobalTime * (i + 1.0) / n) + 1.0 * uv;
             h += pow(0.5 + 0.5 * cos(pi * clamp(simplegridnoise(p * (i + 1.0)) * 2.0, 0.0, 1.0)), s);
           }
 
@@ -303,9 +303,9 @@
 
       void main( void )
       {
-          T = u_time;
+          T = iGlobalTime;
 
-          vec2 r = vec2(1.0, u_resolution.y / u_resolution.x);
+          vec2 r = vec2(1.0, iResolution.y / iResolution.x);
           vec2 uv = vUv;
           vec3 n = blobnoisenrms(25.0 * uv * r, 1.);
           gl_FragColor = texture2D(domTexture, uv + 0.05 * n.xy);
