@@ -12,6 +12,7 @@
         <li><a href="#psychedelic-mercury">Psychedelic Mercury</a></li>
         <li><a href="#rgb-shift">RGB Shift</a></li>
         <li><a href="#rain">Rainy Glass</a></li>
+        <li><a href="#pixel">Pixel</a></li>
         <li><a href="webgl_animation_cloth.html">But why stop there?</a></li>
         <li><a href="shadertoy-convert.html">Shader Toy => WebGL conversion tool (WIP)</a></li>
       </ul>
@@ -322,6 +323,31 @@
           vec2 uv = vUv;
           vec3 n = blobnoisenrms(25.0 * uv * r, 1.);
           gl_FragColor = texture2D(domTexture, uv + 0.05 * n.xy);
+      }
+    </script>
+    <script class="fragment-shader pixel" type="x-shader/x-fragment">
+      #define PI 3.14159265
+      #define SCALE 100.
+      #define RATIO 1.5
+      #define BRIGHTNESS 1.
+      #define SHAPE 2.5
+      varying vec2 vUv;
+      uniform sampler2D domTexture;
+      vec4 pixelate(sampler2D tex, vec2 uv, float scale, float ratio)
+      {
+        float ds = 1.0 / scale;
+        vec2 coord = vec2(ds * ceil(uv.x / ds), (ds * ratio) * ceil(uv.y / ds / ratio));
+        return vec4(texture2D(tex, coord).xyzw);
+      }
+      void main( void )
+      {
+        vec4 color = pixelate(domTexture, vUv, SCALE, RATIO) * BRIGHTNESS;
+        vec2 coord = vUv * vec2(SCALE, SCALE / RATIO);
+        vec2 mv = abs(sin(coord * PI)) * SHAPE;
+        float s = mv.x * mv.y;
+        float c = step(s, 1.0);
+        color = ((1. - c) * color) + ((color * s) * c);
+        gl_FragColor = color;
       }
     </script>
     <script id="vertex-shader" type="x-shader/x-vertex">
